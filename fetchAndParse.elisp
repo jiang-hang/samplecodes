@@ -20,6 +20,10 @@
 	 ("endTime" . "2017-07-01")
 	 ("pageNo" . "1")))
 
+
+;;each element has the format (tag attr-plist content)
+;;where the content are conposed of more elements
+
 ;;;how the enlive-query-all works
 (enlive-query-all
  (enlive-parse
