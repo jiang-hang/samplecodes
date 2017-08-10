@@ -19,3 +19,22 @@
 	 ("startTime" . "2017-01-01")
 	 ("endTime" . "2017-07-01")
 	 ("pageNo" . "1")))
+
+;;;how the enlive-query-all works
+(enlive-query-all
+ (enlive-parse
+  "<div class='ccl' id='aod'><a>dd</a></div><div><a href='http://aa.com'>sss</a></div>")
+ [div > a])
+;;;output:
+;;;((a nil "dd") (a ((href . "http://aa.com")) "sss"))
+
+
+;;show the code for enlive-query-all
+(loop for x in 
+     (enlive-query-all
+      (enlive-parse
+       "<div class='ccl' id='aod'><a>dd</a></div><div><a href='http://aa.com'>sss</a></div>")
+      [div > a])
+   collect (enlive-text x))
+;;result:
+;;("dd" "sss")
