@@ -1,0 +1,21 @@
+;;require package  web enlive
+;;post data to cninfo , convert the page to utf and parese it
+
+(web-http-post
+ (lambda (con header data)
+   (with-current-buffer (get-buffer-create "ttmp")
+     (goto-char (point-max))
+     (insert data)
+     (decode-coding-region (point-min) (point-max) 'gbk)
+     (let ((tt (enlive-text
+		(enlive-query
+		 (libxml-parse-html-region (point-min) (point-max))
+		 [title]))))
+       (insert tt))))
+ :url "http://www.cninfo.com.cn/search/search.jsp"
+ :data '(("noticeType" . "010301")
+	 ("orderby" . "date11")
+	 ("stockCode" . "600309")
+	 ("startTime" . "2017-01-01")
+	 ("endTime" . "2017-07-01")
+	 ("pageNo" . "1")))
