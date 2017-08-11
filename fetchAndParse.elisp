@@ -21,6 +21,35 @@
 	 ("pageNo" . "1")))
 
 
+;;post with request and parse the result
+;;convert the gbk to utf-8
+;;home page for the package is
+;;https://github.com/tkf/emacs-request
+(request
+ "http://www.cninfo.com.cn/search/search.jsp"
+ :type "POST"
+ :data '(("noticeType" . "010301")
+	 ("orderby" . "date11")
+	 ("stockCode" . "600309")
+	 ("startTime" . "2017-01-01")
+	 ("endTime" . "2017-07-01")
+	 ("pageNo" . "1"))
+ :parser (lambda ()
+	   (decode-coding-region (point-min) (point-max) 'gbk)
+	   (libxml-parse-html-region (point-min) (point-max)))
+ :success
+ (cl-function
+  (lambda (&key data &allow-other-keys)
+    (print
+     (loop for x in (enlive-query-all data [td.qsgg > a])
+	   unless (string-suffix-p "摘要" (enlive-text x))
+	   collect (enlive-attr x 'href))
+     (current-buffer))
+    )))
+
+
+
+
 ;;each element has the format (tag attr-plist content)
 ;;where the content are conposed of more elements
 
